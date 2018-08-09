@@ -53,7 +53,7 @@ day()
 hour()
 min()
 second()
-wday()    # weekday (sunday-saturday)
-yday()    # year day (1-366)
-tz()      #timezone
-
+wday()                # weekday (sunday-saturday)
+yday()                # year day (1-366)
+tz()                  # timezone
+am(., label = T)      # betwwen 00:00 am and 12:00 am # parameter label = TRUE recycle the variable name
