@@ -44,4 +44,16 @@ str(formated_dates)
 
 make_date(year = 2018, month = 02, day = 20) # example wihtout existing data
 
+#### Extracting parts of datetime
+
+year(d1) # extract year from a date object
+
+month()
+day()
+hour()
+min()
+second()
+wday()    # weekday (sunday-saturday)
+yday()    # year day (1-366)
+tz()      #timezone
 
