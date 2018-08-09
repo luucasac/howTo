@@ -1,2 +1,10 @@
 # howTo
-A space to put some scripts with recipes for simple funtions or just simple things
+
+## sampling
+This document is about two ways os randomize a dataset into a random sample for experiment.
+
+The dataset its origin from openintro package.
+
+SRS or Simple Random Sample is the way you randomize all data set into random picks in the data.
+
+Stratified its a way to pick randomly equal numbers of data under a group.
