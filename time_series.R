@@ -124,6 +124,97 @@ AP_1951_1959_diff <- diff(AP_1951_1959, lag = 1, log = FALSE, arithmetic = TRUE)
 plot(AP_1951_1959_diff_hand)
 plot(AP_1951_1959_diff) # equivalent to the plot above
 
+# ----------- APPLY BY TIME ----------- #
 
+# end points
 
+endpoints(AirPassengers_xts, on = "quarters")
+endpoints(AirPassengers_xts, on = "quarters", k = 3) # use k for "every" argument
+ep <- endpoints(AirPassengers_xts, on = "years") # return the index of each endpoints, set by year in this case
+# applying mean by year
+
+period.apply(AirPassengers_xts, INDEX = ep, FUN = mean) # apply a mean in each year of our data
+
+apply.yearly(AirPassengers_xts, FUN = mean) # a shortcut to this method
+
+# split.xts method to split data into chunks of time
+# this process producess a list as output
+
+AirPassengers_yearly_l <- split(AirPassengers_xts, f = "years") # returns a list for every year in data
+
+AirPassengers_yearly_l[[2]] # return a list with AirPassengers data of 1950
+
+# aggregating data in time series
+
+# random sampling
+
+df <- data.frame(date = seq(as.Date('2013-01-01'),
+                                 as.Date('2014-12-31'), len = 365),
+                 x = seq(365))
+
+df <- as.xts(df$x, order.by = df$date)
+
+# aggregating by months, OHLC default value is TRUE, that returns open, High, Low and Close values 
+
+to.period(df, period = "months", name = "DF") 
+
+to.monthly(df, name = "DF") # to.period is a generic function, monthly is a method
+
+# rolling windows - applying functions to discrete periods of time
+
+df_l <- split(df, f = "months") # splitted data into list of months values
+df_l_cm <- lapply(df_l, cumsum) # calculated the cumulative sum by periodo in each list
+do.call(rbind, df_l_cm) # bind the list together into a xts object
+## cumprod, cummin and cummax are functions related with this process
+
+# continuous rolling windows
+rollapply(df["201301/08", 1], width = 2, FUN = mean) # applying the mean over 2 periods of discrete dates like moving average
+
+# ----------- Formating index class ----------- #
+
+index(df) # like row.names
+
+indexClass(df) # return the class of date
+
+indexTZ(df) # return the timezone of data
+
+# .index() method to find a POSIXlt class of date
+
+.index(df)
+.indexmon(df)
+.indexyear(df)
+
+# removing duplicated values in index of time series
+
+make.index.unique(df, drop = TRUE) # to drop duplicated values
+
+align.time(df, n = 3600) # rounding timestamp to an hour
+
+# changing the index and tz formatting
+
+indexFormat(df) <- "%b %m, %Y"
+
+tzone(df) <- "America/Sao_Paulo"
+
+View(df) # our data is formatted like ---dez 12, 2014
+
+indexTZ(df) # returns America/Sao_Paulo
+
+# ----------- Periods, Periodicity and Timestamp  ----------- #
+
+# calculating the periodicity
+
+periodicity(df) # weekly periodicity
+
+# changing the periodicity
+
+df_yearly <- to.yearly(df)
+
+periodicity(df_yearly) # yearly periodicity
+
+# calculating de count of periods
+
+nmonths(df) # counter of months in df data
+
+nquarters(df) # counter of quarters in df data
 
