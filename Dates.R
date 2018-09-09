@@ -57,3 +57,9 @@ wday()                # weekday (sunday-saturday)
 yday()                # year day (1-366)
 tz()                  # timezone
 am(., label = T)      # betwwen 00:00 am and 12:00 am # parameter label = TRUE recycle the variable name
+
+#### Rounding datetimes
+
+round_date(unit = "unitoftime") # round to the nearest
+ceiling_date(unit = "unitoftime") # round up
+floor_date(unit = "unitoftime") # round down
