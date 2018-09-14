@@ -5,6 +5,8 @@ library(dummies)
 library(ggplot2)
 library(dplyr)
 library(dendextend)
+library(purrr)
+library(cluster)
 
 # ------- Euclidean Distance --------- #
 
@@ -125,3 +127,42 @@ count(players_clustered, cluster)
 players_clustered %>% 
   group_by(cluster) %>% 
   summarise_all(funs(mean(.)))
+
+# ------- k means --------- #
+## how many cluster to generate
+## centroid is the min distance between a point and the positions
+# k menas will re calculate the position of a centroid until maximize the cluster
+
+model <- kmeans(players, centers = 2) # centers is equally to k
+
+model$cluster
+
+plot(players, col = factor(model$cluster))
+
+## elbow method use the sum of squared euclidean distance to calculate the best k
+## the best point is when the curve becames flatten
+
+total_clusters <- map_dbl(1:3, function(k){
+  model <- kmeans(x = players, centers = k)
+  model$tot.withinss
+}
+)
+
+total_clusters # 2 clusters is the best k for this model
+
+elbow_df <- data.frame(k = 1:3, tot_withinss = total_clusters)
+
+ggplot(elbow_df, aes(k, tot_withinss))+
+  geom_line()
+
+
+# ------ Silhoutte Analysis Method ---------#
+## how well each of observation fit into its cluster
+## within cluster distance calculate the distance between the observation and the other components of the cluster
+## the closest neighbor distance calculate the closest cluster to that observation
+## the value will be between -1 and 1. When its 1, it well matched to the cluster; when 0, its on border between two clusters; when -1 is better fit in neighboring cluster
+pam_k3 <- pam(players, k = 3)
+
+pam_k3$silinfo
+
+
