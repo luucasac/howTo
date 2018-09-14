@@ -1,8 +1,8 @@
 # ----------------------------------------------------------------------------------- #
-#                                    Time series
+#                                        Time series
+#                               Manipulation with xts and zoo
 # ----------------------------------------------------------------------------------- #
 library(xts)
-library(astsa)
 library(zoo)
 
 # importing data from AirPassengers
@@ -217,4 +217,29 @@ periodicity(df_yearly) # yearly periodicity
 nmonths(df) # counter of months in df data
 
 nquarters(df) # counter of quarters in df data
+
+# ----------- Manipulating Time Series with base package  ----------- #
+
+# missing values
+
+# functions to analize atributes of a ts
+
+start(AirPassengers) # starts in jan 1949 
+end(AirPassengers) # ends in dez 1960
+frequency(AirPassengers) # every 12 months is the frequency
+deltat(AirPassengers) # this times increse for every 0.83333 years
+cycle(AirPassengers) # index of the period at a cycle of ts
+time(AirPassengers) # calculate a vector with a linear progression of the series
+
+# manipulating objects with ts()
+
+data <- sample(1:12, 12, replace = T)
+
+plot(data)
+
+data_ts <- ts(data, start = c(2004, 1), frequency = 1)
+
+str(data_ts)
+
+plot(data_ts) # there is especific methods to ts class objects
 
