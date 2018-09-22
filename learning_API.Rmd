@@ -1,0 +1,77 @@
+---
+title: "Data_from_APIs"
+author: "Lucas Alvarenga"
+date: "9/18/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+API's are today an easy and interactively way to **collect** data from web. The most common ways to do that is using R is with the packages: `httr` and `jsonlite`. 
+Now we'll load some packages to work with:
+
+```{r setup, message=FALSE, warning=FALSE}
+library(httr)
+library(jsonlite)
+library(tidyverse)
+```
+
+Now we'll go further and connect with a API from SpaceX to do a request:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+url <- "https://api.spacexdata.com/v2/launches"
+
+r1 <- GET(url = url) # request
+
+```
+
+The `GET()` function allow us to make a request to the API. We get a list like a response from the API, from now, let's take a look at the contents of this list:
+
+```{r message=FALSE, warning=FALSE}
+
+names(r1) # getting the name of the contents of our list
+
+r1$status_code # our status code is 200, so the request was succesfully
+
+r2 <- rawToChar(r1$content) # converting the hex to a string object (it converted to a JSON format)
+
+r3 <- fromJSON(r2)  # extracting the JSON file to a list
+
+```
+
+We have an `class(r3)` class object with nested data
+
+Now we can look at data and start to manipulate that to answer some questions!!
+
+How many rockets, SpaceX lauched **successfuly** to space?
+
+```{r message=FALSE, warning=FALSE}
+r3 %>% 
+  select(mission_name, launch_success, is_tentative) %>% 
+  filter(launch_success == TRUE, is_tentative == FALSE) %>% 
+  tally()
+```
+
+How many flights are re-using the core of rocket?
+
+```{r message=FALSE, warning=FALSE}
+r3$reuse %>% 
+  select(core) %>% 
+  filter(core == TRUE) %>% 
+  tally()
+```
+
+To conclude, we can simple visualize an image from the most used rocket from SpaceX:
+
+```{r message=FALSE, warning=FALSE}
+r3$rocket %>% 
+  select(rocket_name, rocket_type) %>%
+  group_by(rocket_name) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n))
+
+```
+
+Falcon 9:
+![alt text](https://spacenews.com/wp-content/uploads/2018/02/f9-govsat.jpg "Logo Title Text 1")
