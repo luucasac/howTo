@@ -161,8 +161,31 @@ ggplot(elbow_df, aes(k, tot_withinss))+
 ## within cluster distance calculate the distance between the observation and the other components of the cluster
 ## the closest neighbor distance calculate the closest cluster to that observation
 ## the value will be between -1 and 1. When its 1, it well matched to the cluster; when 0, its on border between two clusters; when -1 is better fit in neighboring cluster
+
 pam_k3 <- pam(players, k = 3)
 
-pam_k3$silinfo
+pam_k3$silinfo$avg.width # this is the average distance width for each point in cluster
 
+plot(players)
 
+plot(silhouette(pam_k3))
+
+# highest average silhouette width
+
+sill_width <- map_dbl(2:5, function(k){
+  mod <- pam(x = players, k = k)
+  mod$silinfo$avg.width
+})
+
+sill_df <- data.frame(k = 2:5,
+                      sill_width = sill_width)
+
+print(sill_df) # the best fitted cluster is when k = 2
+
+ggplot(sill_df, aes(x = k, y = sill_width))+
+  geom_line()+
+  scale_x_continuous(breaks = 2:5)
+
+# -------------- case study -----------------#
+
+customer_spend
